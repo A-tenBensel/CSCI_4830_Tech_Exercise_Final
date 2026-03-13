@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from .models import Contact
 from .forms import ContactForm
+import phonenumbers
 # Create your views here.
 
 def front_page(request):
@@ -37,7 +38,7 @@ def search_contact(request):
     page_number = 1
   
   if name or phone or email or address:
-    contacts = Contact.objects.filter(name__icontaints=name, phone__icontains=phone, email__icontains=email, address__icontains=address).order_by("id")
+    contacts = Contact.objects.filter(name__icontains=name, phone__icontains=phone, email__icontains=email, address__icontains=address).order_by("id")
   else:
     contacts = Contact.objects.all().order_by("id")
 
@@ -55,7 +56,14 @@ def edit_contact(request, contact_id, page_number):
   if request.method == "POST":
     contact = Contact.objects.get(id=contact_id)
     name = request.POST.get("name")
-    phone = request.POST.get("phone")
+    try:
+        phone = phonenumbers.parse(request.POST.get("phone"),None)
+        if phonenumbers.is_possible_number(phone) and phonenumbers.is_valid_number(phone):
+            phone = phonenumbers.format_number(phone, PhoneNumberFormat.E164)
+        else:
+            phone = contact.phone
+    except:
+        phone = contact.phone
     email = request.POST.get("email")
     address = request.POST.get("address")
     if contact.name != name or contact.phone != phone or contact.email != email or contact.address != address:

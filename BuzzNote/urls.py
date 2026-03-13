@@ -10,5 +10,5 @@ urlpatterns = [path("", front_page,name="front_page"),
     path("add/",add_contact,name="add_contact"),
     path("search/",search_contact, name="search_contact"),
     path("edit_contact/<int:contact_id>/<int:page_number>/",edit_contact,name="edit_contact"),
-    path("delete_contact/<int:contact_id>/<int:page__number>/",delete_contact,name="delete_contact"),
+    path("delete_contact/<int:contact_id>/<int:page_number>/",delete_contact,name="delete_contact"),
 ]
