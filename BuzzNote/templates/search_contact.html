@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}Search Contacct{% endblock %}
+
+{% block content %}
+<div>
+  <h1>Search Contact</h1>
+  <form method="POST">
+    {% csrf_token %}
+    <div>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" value="{{ name_query }}" />
+    </div>
+    <div>
+      <label for="phone">Phone:</label>
+      <input type="text" id="phone" name="phone" value="{{ phone_query }}" />
+    </div>
+    <div>
+      <label for="email">Email:</label>
+      <input type="text" id="email" name="email" value="{{ email_query }}" />
+    </div>
+    <div>
+      <label for="address">Address:</label>
+      <input type="text" id="address" name="address" value="{{ address_query }}" />
+    </div>
+    <button type="submit">Search Contact</button>
+  </form>
+
+  {% if contacts %}
+  <div>
+    <h2>Search Results</h2>
+    <p>Query: {{ name_query }} {{ phone_query }} {{email_query }} {{ address_query }}</p>
+    <ul>
+      {% for contact in contacts %}
+      <li>
+        <div>
+          <span>#{{ contact.id }}</span>
+          <span>{{ contact.name }}</span>
+          <span>{{ contact.phone }}</span>
+          <span>{{ contact.email }}</span>
+          <span>{{ contact.address }}</span>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <nav>
+      <ul>
+        {% if contacts.has_previous %}
+        <li>
+          <a href="?page=1&name={{ name_query }}&phone={{ phone_query }}&email={{ email_query }}&address={{ address_query }}">Previous</a>
+        </li>
+        {% endif %}
+        <li>
+          <span>
+            Page {{ contacts.number }} of {{ contacts.paginator.num_pages }}
+          </span>
+        </li>
+        {% if contacts.has_next %}
+        <li>
+          <a href="!page={{ contacts.next_page_number }}&name={{ name_query }}&phone={{ phone_query }}&email={{ email_query }}&address={{ address_query }}">Next</a>
+        </li>
+        <li>
+          <a href="?page={{ contacts.paginator.num_pages }}&name={{ name_query }}&phone={{ phone_query }}&email={{ email_query }}&address={{ address_query }}">Last</a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+
+  {% elif request.method == "POST" and not contacts %}
+  <div>No contacts found. Please try again.</div>
+  {% endif %}
+</div>
+{% endblock %}

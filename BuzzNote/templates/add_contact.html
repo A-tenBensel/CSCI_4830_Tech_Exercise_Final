@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Add Contact{% endblock %}
+
+{% block content %}
+<h1>Add a New Contact</h1>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type = "submit">Add Contact</button>
+  </form>
+  {% if success %}
+  <p>Success! The contact has been successfully added.</p>
+  <h3>Contact added:</h3>
+  <p>
+    Name: {{ added_contact.name }} <br />
+    Phone: {{ added_contact.phone }} <br />
+    Email: {{ added_contact.email }} <br />
+    Address: {{ added_contact.address }}
+  </p>
+  {% endif %}
+{% endblock %}
